@@ -6,8 +6,16 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/convert': 'http://127.0.0.1:8000',
-      '/download': 'http://127.0.0.1:8000'
+      '/convert': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/download': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        secure: false,
+      }
     }
   }
 })
