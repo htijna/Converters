@@ -41,3 +41,5 @@ Health checks:
 
 - `PDF to Image` now exports as `png`, which matches the backend converter implementation.
 - Backend upload and converted-file directories now use absolute paths so they behave consistently in hosted environments.
+- `aspose-words` and `aspose-slides` were updated to currently available PyPI versions.
+- `aspose-slides` documents a Linux runtime dependency on `libgdiplus`. If `PPTX -> PDF` fails after deploy, install `libgdiplus` on the backend host or choose a host that already provides it.

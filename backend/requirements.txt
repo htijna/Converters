@@ -4,5 +4,5 @@ python-multipart==0.0.6
 pymupdf==1.23.6
 Pillow==10.1.0
 pdf2docx==0.5.6
-aspose-words==23.11.0
-aspose-slides==23.11.0
+aspose-words==26.2.0
+aspose-slides==26.2.0
