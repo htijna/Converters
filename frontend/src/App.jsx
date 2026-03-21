@@ -21,7 +21,7 @@ import './index.css';
 import logoDark from './assets/logodark.png';
 import logoLight from './assets/logolight.png';
 
-const API_URL = import.meta.env.VITE_API_URL || "";
+const API_URL = "";
 
 const CONVERSION_OPTIONS = [
   { id: 'pdf_docx', from: 'pdf', to: 'docx', label: 'PDF to Word', icon: <FileText size={20} /> },
