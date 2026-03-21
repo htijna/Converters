@@ -22,6 +22,7 @@ Recommended backend settings for Render, Railway, or a similar Python host:
 - Root directory: `backend`
 - Build command: `pip install -r requirements.txt`
 - Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+- Python version: `3.11.9` (the repo pins this with `backend/.python-version`)
 
 Environment variables:
 
