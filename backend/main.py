@@ -2,7 +2,7 @@ import os
 import uuid
 import shutil
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, BackgroundTasks
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from contextlib import asynccontextmanager
@@ -10,8 +10,16 @@ from contextlib import asynccontextmanager
 from services.converter import FileConverter
 from services.utils import cleanup_old_files, safe_remove
 
-UPLOAD_DIR = "uploads"
-CONV_DIR = "converted"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+CONV_DIR = os.path.join(BASE_DIR, "converted")
+
+
+def get_allowed_origins():
+    origins = os.environ.get("ALLOWED_ORIGINS", "*").strip()
+    if origins == "*":
+        return ["*"]
+    return [origin.strip() for origin in origins.split(",") if origin.strip()]
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -24,12 +32,24 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="AKJ Converter API", lifespan=lifespan)
 
 # CORS
+allowed_origins = get_allowed_origins()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
+    allow_credentials=allowed_origins != ["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/")
+async def root():
+    return {"status": "ok", "service": "AKJ Converter API"}
+
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
 
 @app.post("/convert")
 async def convert_file(
@@ -101,4 +121,3 @@ async def download_file(filename: str, dname: str = None):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
-

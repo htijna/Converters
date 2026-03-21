@@ -28,7 +28,7 @@ const CONVERSION_OPTIONS = [
   { id: 'docx_pdf', from: 'docx', to: 'pdf', label: 'Word to PDF', icon: <FileText size={20} /> },
   { id: 'pptx_pdf', from: 'pptx', to: 'pdf', label: 'PPT to PDF', icon: <Files size={20} /> },
   { id: 'img_pdf', from: 'image', to: 'pdf', label: 'Image to PDF', icon: <FileImage size={20} /> },
-  { id: 'pdf_img', from: 'pdf', to: 'image', label: 'PDF to Image', icon: <FileImage size={20} /> },
+  { id: 'pdf_img', from: 'pdf', to: 'png', label: 'PDF to Image', icon: <FileImage size={20} /> },
 ];
 
 function App() {
