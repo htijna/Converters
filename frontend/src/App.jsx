@@ -84,9 +84,10 @@ function App() {
     const selectedOption = CONVERSION_OPTIONS.find(o => o.id === targetFormat);
     formData.append('target_format', selectedOption.to);
 
+    let progressInterval;
+    
     try {
       // Start a slow auto-increment for the 'converting' phase
-      let progressInterval;
       
       const response = await axios.post(`${API_URL}/convert`, formData, {
         onUploadProgress: (progressEvent) => {
@@ -131,6 +132,7 @@ function App() {
       }, 500);
 
     } catch (err) {
+      if (progressInterval) clearInterval(progressInterval);
       console.error("Conversion Error:", err);
       const msg = err.response?.data?.detail || "The conversion engine encountered an issue. Check the file format or try again.";
       setError(msg);
