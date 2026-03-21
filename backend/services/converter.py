@@ -54,7 +54,12 @@ class FileConverter:
         if docx_to_pdf_win:
             try:
                 print("Trying docx2pdf...")
-                docx_to_pdf_win(input_path, output_path)
+                import pythoncom
+                pythoncom.CoInitialize()
+                try:
+                    docx_to_pdf_win(input_path, output_path)
+                finally:
+                    pythoncom.CoUninitialize()
                 print("docx2pdf successful.")
                 return True
             except Exception as e:
@@ -80,13 +85,18 @@ class FileConverter:
         if comtypes_client:
             try:
                 print("Trying comtypes (PowerPoint)...")
-                powerpoint = comtypes.client.CreateObject("Powerpoint.Application")
-                powerpoint.Visible = 1
-                pres = powerpoint.Presentations.Open(os.path.abspath(input_path))
-                # 32 is ppSaveAsPDF
-                pres.SaveAs(os.path.abspath(output_path), 32)
-                pres.Close()
-                powerpoint.Quit()
+                import pythoncom
+                pythoncom.CoInitialize()
+                try:
+                    powerpoint = comtypes.client.CreateObject("Powerpoint.Application")
+                    powerpoint.Visible = 1
+                    pres = powerpoint.Presentations.Open(os.path.abspath(input_path))
+                    # 32 is ppSaveAsPDF
+                    pres.SaveAs(os.path.abspath(output_path), 32)
+                    pres.Close()
+                    powerpoint.Quit()
+                finally:
+                    pythoncom.CoUninitialize()
                 print("comtypes (PowerPoint) successful.")
                 return True
             except Exception as e:

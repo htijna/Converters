@@ -52,7 +52,7 @@ async def health():
     return {"status": "healthy"}
 
 @app.post("/convert")
-async def convert_file(
+def convert_file(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     target_format: str = Form(...)
