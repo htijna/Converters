@@ -55,11 +55,13 @@ function App() {
     }
   }, [darkMode]);
 
-  const fileInputRef = useRef(null);
+  // Removed unused fileInputRef
 
   const handleFileSelect = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile && selectedFile.size > 25 * 1024 * 1024) {
+    const selectedFile = e.target.files && e.target.files[0];
+    if (!selectedFile) return;
+
+    if (selectedFile.size > 25 * 1024 * 1024) {
       setError("File size exceeds 25MB limit.");
       return;
     }
@@ -140,17 +142,15 @@ function App() {
     }
   };
 
-  const handleDownload = async (url, filename) => {
+  const handleDownload = (url, filename) => {
     try {
-      const response = await axios.get(`${API_URL}${url}`, { responseType: 'blob' });
-      const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
+      const fullUrl = `${API_URL}${url}`;
       const link = document.createElement('a');
-      link.href = blobUrl;
-      link.setAttribute('download', filename);
+      link.href = fullUrl;
+      link.setAttribute('download', filename || '');
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
-      window.URL.revokeObjectURL(blobUrl);
     } catch (err) {
       console.error("Download failed:", err);
       setError("Download failed. Please try again.");
@@ -210,7 +210,7 @@ function App() {
               animate={{ opacity: 1 }} 
               exit={{ opacity: 0 }}
             >
-              <div 
+              <label 
                 className="dropzone"
                 onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('active'); }}
                 onDragLeave={(e) => e.currentTarget.classList.remove('active')}
@@ -220,19 +220,19 @@ function App() {
                   const droppedFile = e.dataTransfer.files[0];
                   handleFileSelect({ target: { files: [droppedFile] } });
                 }}
-                onClick={() => fileInputRef.current.click()}
+                htmlFor="file-upload-input"
               >
                 <UploadCloud size={60} color="var(--accent-blue)" strokeWidth={1.5} />
-                <h3>{file ? file.name : "Choose a file or drag it here"}</h3>
+                <h3>{file ? file.name : "Choose a file or tap here"}</h3>
                 <p>Support for PDF, DOCX, PPTX, JPG, PNG (Max 25MB)</p>
                 <input 
+                  id="file-upload-input"
                   type="file" 
-                  hidden 
-                  ref={fileInputRef} 
+                  style={{ display: 'none' }}
                   onChange={handleFileSelect}
                   accept=".pdf,.docx,.pptx,.jpg,.png,.jpeg"
                 />
-              </div>
+              </label>
 
               {file && (
                 <div className="options-section">
